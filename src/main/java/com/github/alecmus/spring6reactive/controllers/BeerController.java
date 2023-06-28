@@ -20,18 +20,21 @@ public class BeerController {
 
     private final BeerService beerService;
 
+    @PutMapping(BEER_PATH_ID)
+    Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId,
+                                                  @RequestBody BeerDTO beerDTO){
+        return beerService.updateBeer(beerId, beerDTO)
+                .map(savedDto -> ResponseEntity.ok().build());
+    }
+
     @PostMapping(BEER_PATH)
-    ResponseEntity<Void> createNewBeer(@RequestBody BeerDTO beerDTO) {
-        AtomicInteger atomicInteger = new AtomicInteger();
-
-        beerService.saveNewBeer(beerDTO).subscribe(savedDto -> {
-            atomicInteger.set(savedDto.getId());
-        });
-
-        return ResponseEntity.created(UriComponentsBuilder
-                .fromHttpUrl("http://localhost:8080/" + BEER_PATH + "/" + atomicInteger.get())
-                .build().toUri())
-                .build();
+    Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDTO beerDTO){
+        return beerService.saveNewBeer(beerDTO)
+                .map(savedDto -> ResponseEntity.created(UriComponentsBuilder
+                                .fromHttpUrl("http://localhost:8080/" + BEER_PATH
+                                        + "/" + savedDto.getId())
+                                .build().toUri())
+                        .build());
     }
 
     @GetMapping(BEER_PATH_ID)
