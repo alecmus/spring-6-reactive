@@ -18,7 +18,7 @@ public class CustomerDTO {
 
     @NotBlank
     @Size(min = 3, max = 255)
-    private String name;
+    private String customerName;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }

@@ -14,47 +14,48 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class CustomerController {
 
+    public static final String CUSTOMER_PATH = "/api/v2/customer";
+    public static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{customerId}";
+
     private final CustomerService customerService;
-    private static final String CUSTOMER_PATH = "/api/v2/customer";
-    private static final String CUSTOMER_PATH_ID = CUSTOMER_PATH + "/{customerId}";
 
-    @GetMapping(CUSTOMER_PATH)
-    Flux<CustomerDTO> getAllCustomers() {
-        return customerService.listCustomers();
-    }
-
-    @GetMapping(CUSTOMER_PATH_ID)
-    Mono<CustomerDTO> getCustomerById(@PathVariable("customerId") Integer customerId) {
-        return customerService.getCustomerById(customerId);
-    }
-
-    @PostMapping(CUSTOMER_PATH)
-    Mono<ResponseEntity<Void>> saveNewCustomer(@Validated @RequestBody CustomerDTO customerDTO) {
-        return customerService.saveNewCustomer(customerDTO)
-                .map(savedCustomer -> ResponseEntity.created(UriComponentsBuilder.fromHttpUrl(
-                        "http://localhost:8080" + CUSTOMER_PATH
-                                + "/" + savedCustomer.getId())
-                        .build().toUri()
-                ).build());
-    }
-
-    @PutMapping(CUSTOMER_PATH_ID)
-    Mono<ResponseEntity<Void>> updateExistingCustomer(@PathVariable("customerId") Integer customerId,
-                                                      @Validated @RequestBody CustomerDTO customerDTO) {
-        return customerService.updateCustomer(customerId, customerDTO)
-                .map(savedDto -> ResponseEntity.ok().build());
+    @DeleteMapping(CUSTOMER_PATH_ID)
+    Mono<ResponseEntity<Void>> deleteById(@PathVariable("customerId") Integer customerId){
+        return customerService.deleteCustomerById(customerId).map(response -> ResponseEntity
+                .noContent().build());
     }
 
     @PatchMapping(CUSTOMER_PATH_ID)
     Mono<ResponseEntity<Void>> patchExistingCustomer(@PathVariable("customerId") Integer customerId,
-                                                      @Validated @RequestBody CustomerDTO customerDTO) {
+                                                     @Validated @RequestBody CustomerDTO customerDTO){
         return customerService.patchCustomer(customerId, customerDTO)
+                .map(updatedDto -> ResponseEntity.ok().build());
+    }
+
+    @PutMapping(CUSTOMER_PATH_ID)
+    Mono<ResponseEntity<Void>> updateExistingCustomer(@PathVariable("customerId") Integer customerId,
+                                                      @Validated @RequestBody CustomerDTO customerDTO){
+        return customerService.updateCustomer(customerId, customerDTO)
                 .map(savedDto -> ResponseEntity.ok().build());
     }
 
-    @DeleteMapping(CUSTOMER_PATH_ID)
-    Mono<ResponseEntity<Void>> deleteCustomer(@PathVariable("customerId") Integer customerId) {
-        return customerService.deleteCustomerById(customerId)
-                .map(response -> ResponseEntity.noContent().build());
+    @PostMapping(CUSTOMER_PATH)
+    Mono<ResponseEntity<Void>> createNewCustomer(@Validated @RequestBody CustomerDTO customerDTO){
+        return customerService.saveNewCustomer(customerDTO)
+                .map(savedDto -> ResponseEntity.created(UriComponentsBuilder
+                                .fromHttpUrl("http://localhost:8080/" + CUSTOMER_PATH
+                                        + "/" + savedDto.getId())
+                                .build().toUri())
+                        .build());
+    }
+
+    @GetMapping(CUSTOMER_PATH_ID)
+    Mono<CustomerDTO> getCustomerById(@PathVariable("customerId") Integer customerId){
+        return customerService.getCustomerById(customerId);
+    }
+
+    @GetMapping(CUSTOMER_PATH)
+    Flux<CustomerDTO> listCustomers(){
+        return customerService.listCustomers();
     }
 }

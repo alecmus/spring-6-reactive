@@ -37,11 +37,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Mono<CustomerDTO> updateCustomer(Integer customerId, CustomerDTO customerDTO) {
         return customerRepository.findById(customerId)
-                .map(foundCustomer -> {
-                    // update properties
-                    foundCustomer.setName(customerDTO.getName());
-
-                    return foundCustomer;
+                .map(customer -> {
+                    customer.setCustomerName(customerDTO.getCustomerName());
+                    return customer;
                 }).flatMap(customerRepository::save)
                 .map(customerMapper::customerToCustomerDto);
     }
@@ -49,12 +47,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Mono<CustomerDTO> patchCustomer(Integer customerId, CustomerDTO customerDTO) {
         return customerRepository.findById(customerId)
-                .map(foundCustomer -> {
-                    if (StringUtils.hasText(customerDTO.getName())) {
-                        foundCustomer.setName(customerDTO.getName());
+                .map(customer -> {
+                    if (StringUtils.hasText(customerDTO.getCustomerName())){
+                        customer.setCustomerName(customerDTO.getCustomerName());
                     }
-
-                    return foundCustomer;
+                    return customer;
                 }).flatMap(customerRepository::save)
                 .map(customerMapper::customerToCustomerDto);
     }

@@ -15,7 +15,7 @@ public class Customer {
 
     @Id
     private Integer id;
-    private String name;
+    private String customerName;
 
     @CreatedDate
     private LocalDateTime createdDate;

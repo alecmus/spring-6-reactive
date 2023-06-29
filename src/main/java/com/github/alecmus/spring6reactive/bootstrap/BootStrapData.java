@@ -38,19 +38,19 @@ public class BootStrapData implements CommandLineRunner {
         customerRepository.count().subscribe(count -> {
             if (count == 0) {
                 Customer customer1 = Customer.builder()
-                        .name("Customer 1")
+                        .customerName("Customer 1")
                         .createdDate(LocalDateTime.now())
                         .lastModifiedDate(LocalDateTime.now())
                         .build();
 
                 Customer customer2 = Customer.builder()
-                        .name("Customer 2")
+                        .customerName("Customer 2")
                         .createdDate(LocalDateTime.now())
                         .lastModifiedDate(LocalDateTime.now())
                         .build();
 
                 Customer customer3 = Customer.builder()
-                        .name("Customer 3")
+                        .customerName("Customer 3")
                         .createdDate(LocalDateTime.now())
                         .lastModifiedDate(LocalDateTime.now())
                         .build();
