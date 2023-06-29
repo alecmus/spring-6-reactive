@@ -20,6 +20,13 @@ public class BeerController {
 
     private final BeerService beerService;
 
+    @PatchMapping(BEER_PATH_ID)
+    Mono<ResponseEntity<Void>> patchExistingBeer(@PathVariable Integer beerId,
+                                                 @RequestBody BeerDTO beerDTO){
+        return beerService.patchBeer(beerId, beerDTO)
+                .map(updatedDto -> ResponseEntity.ok().build());
+    }
+
     @PutMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> updateExistingBeer(@PathVariable("beerId") Integer beerId,
                                                   @RequestBody BeerDTO beerDTO){
@@ -38,12 +45,12 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH_ID)
-    Mono<BeerDTO> getBeerById(@PathVariable("beerId") Integer beerId) {
+    Mono<BeerDTO> getBeerById(@PathVariable("beerId") Integer beerId){
         return beerService.getBeerById(beerId);
     }
 
     @GetMapping(BEER_PATH)
-    Flux<BeerDTO> listBeers() {
+    Flux<BeerDTO> listBeers(){
         return beerService.listBeers();
     }
 }

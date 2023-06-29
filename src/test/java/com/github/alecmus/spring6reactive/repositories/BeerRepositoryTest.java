@@ -21,6 +21,7 @@ class BeerRepositoryTest {
     @Test
     void testCreateJson() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
+
         System.out.println(objectMapper.writeValueAsString(getTestBeer()));
     }
 
