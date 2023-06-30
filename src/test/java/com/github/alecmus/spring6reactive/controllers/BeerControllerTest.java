@@ -22,6 +22,15 @@ class BeerControllerTest {
     WebTestClient webTestClient;
 
     @Test
+    void testPatchIdNotFound() {
+        webTestClient.patch()
+                .uri(BeerController.BEER_PATH_ID, 999)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     @Order(999)
     void testDeleteBeer() {
         webTestClient.delete()
@@ -69,8 +78,8 @@ class BeerControllerTest {
         testBeer.setBeerName("");
 
         webTestClient.post().uri(BeerController.BEER_PATH)
-            .body(Mono.just(testBeer), BeerDTO.class)
-                .header("Content-type", "application/json")
+                .body(Mono.just(testBeer), BeerDTO.class)
+                .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -79,7 +88,7 @@ class BeerControllerTest {
     void testCreateBeer() {
         webTestClient.post().uri(BeerController.BEER_PATH)
                 .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
-                .header("Content-type", "application/json")
+                .header("Content-Type", "application/json")
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().location("http://localhost:8080/api/v2/beer/4");
