@@ -23,7 +23,7 @@ public class BeerController {
     Mono<ResponseEntity<Void>> deleteById(@PathVariable Integer beerId){
         return beerService.deleteBeerById(beerId)
                 .thenReturn(ResponseEntity
-                                .noContent().build());
+                        .noContent().build());
     }
 
     @PatchMapping(BEER_PATH_ID)
